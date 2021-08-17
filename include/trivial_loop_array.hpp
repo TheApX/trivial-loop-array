@@ -79,6 +79,11 @@ class trivial_loop_array<
   void push_back(const T& v);
   void push_front(const T& v);
 
+  T& front() { return at(0); }
+  const T& front() const { return at(0); }
+  T& back() { return at(array_size - 1); }
+  const T& back() const { return at(array_size - 1); }
+
   // ---------- data ----------
   T data[kCapacity];
   size_t start_index;

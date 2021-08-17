@@ -173,4 +173,19 @@ TEST(TrivialLoopArray, PushFrontWrapsAround) {
   EXPECT_THAT(array.start_index, Eq(array.capacity() - 1));
 }
 
+TEST(TrivialLoopArray, FrontBack) {
+  theapx::trivial_loop_array<int, 10> mutable_array{
+      .data = {0, 0, 1, 2, 3},
+      .start_index = 2,
+      .array_size = 3,
+  };
+
+  const theapx::trivial_loop_array<int, 10>& const_array = mutable_array;
+
+  EXPECT_THAT(mutable_array.front(), Eq(1));
+  EXPECT_THAT(mutable_array.back(), Eq(3));
+  EXPECT_THAT(const_array.front(), Eq(1));
+  EXPECT_THAT(const_array.back(), Eq(3));
+}
+
 }  // namespace
