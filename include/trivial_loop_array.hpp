@@ -13,6 +13,8 @@ template <class T, size_t kCapacity>
 class trivial_loop_array<
     T, kCapacity, typename std::enable_if<std::is_trivial<T>::value>::type> {
  public:
+  using value_type = T;
+
   template <class Owner, class P>
   class iterator_base {
    public:
