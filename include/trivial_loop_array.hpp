@@ -75,6 +75,7 @@ class trivial_loop_array<
 
   void reserve(size_t){/*no-op*/};
   void resize(size_t new_size);
+  void clear() { resize(0); }
 
   void push_back(const T& v);
   void push_front(const T& v);
