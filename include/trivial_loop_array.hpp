@@ -26,7 +26,7 @@ class trivial_loop_array<
     using iterator_category = std::input_iterator_tag;
     using value_type = T;
     using size_type = size_t;
-    using difference_type = ptrdiff_t;
+    using difference_type = long long;
     using reference = T&;
     using const_reference = const T&;
     using pointer = T*;
@@ -55,6 +55,25 @@ class trivial_loop_array<
       return result;
     }
 
+    long long operator-(const iterator_base<Owner, P>& other) {
+      return static_cast<difference_type>(this->pos_) - other.pos_;
+    }
+
+    iterator_base<Owner, P> operator+(long long diff) {
+      return iterator_base<Owner, P>(owner_, pos_ + diff);
+    }
+
+    iterator_base<Owner, P> operator-(long long diff) {
+      return iterator_base<Owner, P>(owner_, pos_ - diff);
+    }
+
+    bool operator<(const iterator_base<Owner, P>& other) {
+      return pos_ < other.pos_;
+    }
+    bool operator>(const iterator_base<Owner, P>& other) {
+      return pos_ > other.pos_;
+    }
+
     bool operator==(const iterator_base<Owner, P>& other) const {
       return this->owner_ == other.owner_ && this->pos_ == other.pos_;
     }
@@ -68,12 +87,12 @@ class trivial_loop_array<
 
    private:
     Owner* owner_;
-    int pos_;
+    size_t pos_;
   };
 
   using value_type = T;
   using size_type = size_t;
-  using difference_type = ptrdiff_t;
+  using difference_type = long long;
   using reference = T&;
   using const_reference = const T&;
   using pointer = T*;

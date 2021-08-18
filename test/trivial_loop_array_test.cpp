@@ -8,6 +8,7 @@ namespace {
 static_assert(std::is_trivial<theapx::trivial_loop_array<int, 10>>::value);
 
 using ::testing::Eq;
+using ::testing::IsFalse;
 using ::testing::IsTrue;
 
 TEST(TrivialLoopArray, EmptyInitializer) {
@@ -207,6 +208,29 @@ TEST(TrivialLoopArray, Create) {
 
   auto test_array = theapx::trivial_loop_array<int, 10>::Create({1, 2, 3});
   EXPECT_THAT(test_array, testing::ElementsAreArray(array));
+}
+
+TEST(TrivialLoopArray, IteratorOperators) {
+  theapx::trivial_loop_array<int, 10> array =
+      theapx::trivial_loop_array<int, 10>::Create({1, 2, 3, 4, 5});
+
+  auto it = array.begin();
+  EXPECT_THAT(*it, Eq(1));
+
+  auto it2 = it + 2;
+  EXPECT_THAT(*it2, Eq(3));
+
+  auto it3 = it2 - 1;
+  EXPECT_THAT(*it3, Eq(2));
+
+  EXPECT_THAT(it2 - it, Eq(2));
+  EXPECT_THAT(it - it2, Eq(-2));
+
+  EXPECT_THAT(it < it2, IsTrue());
+  EXPECT_THAT(it2 > it, IsTrue());
+
+  EXPECT_THAT(it > it2, IsFalse());
+  EXPECT_THAT(it2 < it, IsFalse());
 }
 
 }  // namespace
