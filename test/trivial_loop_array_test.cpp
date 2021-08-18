@@ -188,4 +188,14 @@ TEST(TrivialLoopArray, FrontBack) {
   EXPECT_THAT(const_array.back(), Eq(3));
 }
 
+TEST(TrivialLoopArray, ElemetsAreArrayMatcher) {
+  theapx::trivial_loop_array<int, 10> array{
+      .data = {0, 0, 1, 2, 3},
+      .start_index = 2,
+      .array_size = 3,
+  };
+
+  EXPECT_THAT(array, testing::ElementsAreArray(array));
+}
+
 }  // namespace

@@ -12,12 +12,27 @@ class trivial_loop_array {};  // primary template
 template <class T, size_t kCapacity>
 class trivial_loop_array<
     T, kCapacity, typename std::enable_if<std::is_trivial<T>::value>::type> {
- public:
-  using value_type = T;
+ private:
+  struct fake_allocator {
+    typedef T value_type;
+    typedef T* pointer;
+    typedef const T* const_pointer;
+  };
 
+ public:
   template <class Owner, class P>
   class iterator_base {
    public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = T;
+    using size_type = size_t;
+    using difference_type = ptrdiff_t;
+    using reference = T&;
+    using const_reference = const T&;
+    using pointer = T*;
+    using const_pointer = const T*;
+    using allocator_type = fake_allocator;
+
     P& operator*() { return owner_->at(pos_); }
     P* operator->() { return &owner_->at(pos_); }
 
@@ -56,8 +71,18 @@ class trivial_loop_array<
     int pos_;
   };
 
+  using value_type = T;
+  using size_type = size_t;
+  using difference_type = ptrdiff_t;
+  using reference = T&;
+  using const_reference = const T&;
+  using pointer = T*;
+  using const_pointer = const T*;
   using iterator = iterator_base<trivial_loop_array, T>;
   using const_iterator = iterator_base<const trivial_loop_array, const T>;
+  //   using reverse_iterator = std::reverse_iterator<iterator>;
+  //   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+  using allocator_type = fake_allocator;
 
   iterator begin() { return iterator(this, 0); }
   iterator end() { return iterator(this, array_size); }
