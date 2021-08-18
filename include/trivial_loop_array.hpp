@@ -6,18 +6,16 @@
 
 namespace theapx {
 
-template <class T, size_t kCapacity, class Enable = void>
-class trivial_loop_array {};  // primary template
-
 template <class T, size_t kCapacity>
-class trivial_loop_array<
-    T, kCapacity, typename std::enable_if<std::is_trivial<T>::value>::type> {
+class trivial_loop_array {
  private:
   struct fake_allocator {
     typedef T value_type;
     typedef T* pointer;
     typedef const T* const_pointer;
   };
+
+  static_assert(std::is_trivial<T>::value);
 
  public:
   template <class Owner, class P>
@@ -129,12 +127,9 @@ class trivial_loop_array<
   T& back() { return at(array_size - 1); }
   const T& back() const { return at(array_size - 1); }
 
-  static trivial_loop_array<
-      T, kCapacity, typename std::enable_if<std::is_trivial<T>::value>::type>
-  Create(const std::initializer_list<T>& data) {
-    trivial_loop_array<T, kCapacity,
-                       typename std::enable_if<std::is_trivial<T>::value>::type>
-        result{};
+  static trivial_loop_array<T, kCapacity> Create(
+      const std::initializer_list<T>& data) {
+    trivial_loop_array<T, kCapacity> result{};
     for (const T& x : data) {
       result.push_back(x);
     }
@@ -150,9 +145,7 @@ class trivial_loop_array<
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 template <class T, size_t kCapacity>
-inline T& trivial_loop_array<
-    T, kCapacity,
-    typename std::enable_if<std::is_trivial<T>::value>::type>::at(size_t pos) {
+inline T& trivial_loop_array<T, kCapacity>::at(size_t pos) {
   if (pos >= array_size || pos < 0) {
     throw std::out_of_range("pos");
   }
@@ -160,10 +153,7 @@ inline T& trivial_loop_array<
 }
 
 template <class T, size_t kCapacity>
-inline const T& trivial_loop_array<
-    T, kCapacity,
-    typename std::enable_if<std::is_trivial<T>::value>::type>::at(size_t pos)
-    const {
+inline const T& trivial_loop_array<T, kCapacity>::at(size_t pos) const {
   if (pos >= array_size || pos < 0) {
     throw std::out_of_range("pos");
   }
@@ -171,9 +161,7 @@ inline const T& trivial_loop_array<
 }
 
 template <class T, size_t kCapacity>
-inline void trivial_loop_array<
-    T, kCapacity, typename std::enable_if<std::is_trivial<T>::value>::type>::
-    resize(size_t new_size) {
+inline void trivial_loop_array<T, kCapacity>::resize(size_t new_size) {
   if (new_size > kCapacity || new_size < 0) {
     throw std::out_of_range("new_size");
   }
@@ -181,9 +169,7 @@ inline void trivial_loop_array<
 }
 
 template <class T, size_t kCapacity>
-inline void trivial_loop_array<
-    T, kCapacity, typename std::enable_if<std::is_trivial<T>::value>::type>::
-    push_back(const T& v) {
+inline void trivial_loop_array<T, kCapacity>::push_back(const T& v) {
   if (array_size == kCapacity) {
     throw std::length_error("trivial_loop_array capacity exceeded");
   }
@@ -193,9 +179,7 @@ inline void trivial_loop_array<
 }
 
 template <class T, size_t kCapacity>
-inline void trivial_loop_array<
-    T, kCapacity, typename std::enable_if<std::is_trivial<T>::value>::type>::
-    push_front(const T& v) {
+inline void trivial_loop_array<T, kCapacity>::push_front(const T& v) {
   if (array_size == kCapacity) {
     throw std::length_error("trivial_loop_array capacity exceeded");
   }
