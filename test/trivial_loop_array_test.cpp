@@ -198,4 +198,15 @@ TEST(TrivialLoopArray, ElemetsAreArrayMatcher) {
   EXPECT_THAT(array, testing::ElementsAreArray(array));
 }
 
+TEST(TrivialLoopArray, Create) {
+  theapx::trivial_loop_array<int, 10> array{
+      .data = {0, 0, 1, 2, 3},
+      .start_index = 2,
+      .array_size = 3,
+  };
+
+  auto test_array = theapx::trivial_loop_array<int, 10>::Create({1, 2, 3});
+  EXPECT_THAT(test_array, testing::ElementsAreArray(array));
+}
+
 }  // namespace

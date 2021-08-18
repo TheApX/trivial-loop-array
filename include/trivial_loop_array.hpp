@@ -110,6 +110,18 @@ class trivial_loop_array<
   T& back() { return at(array_size - 1); }
   const T& back() const { return at(array_size - 1); }
 
+  static trivial_loop_array<
+      T, kCapacity, typename std::enable_if<std::is_trivial<T>::value>::type>
+  Create(const std::initializer_list<T>& data) {
+    trivial_loop_array<T, kCapacity,
+                       typename std::enable_if<std::is_trivial<T>::value>::type>
+        result{};
+    for (const T& x : data) {
+      result.push_back(x);
+    }
+    return result;
+  }
+
   // ---------- data ----------
   T data[kCapacity];
   size_t start_index;
